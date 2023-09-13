@@ -13,7 +13,7 @@ export default function Item({ backgroundColor }) {
             className={`rounded-[10px] w-fit font-black text-2xl flex flex-col px-5 py-5 justify-center bg-[#252525] bg-opacity-70 hover:bg-opacity-100 transition-opacity duration-1000 ease-in-out cursor-pointer`}
             onClick={() => router.push(`/service-detail/${category.id}`)}
           >
-            <div className="sm:w-40 sm:h-40 w-28 h-28 bg-black rounded-[10px] overflow-hidden group-hover:opacity-75 transition-opacity duration-300 ease-in-out">
+            <div className="w-40 h-40  bg-black rounded-[10px] overflow-hidden group-hover:opacity-75 transition-opacity duration-300 ease-in-out">
               <img
                 className="object-cover w-full h-full "
                 src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGljfGVufDB8fDB8fHww&w=1000&q=80"
