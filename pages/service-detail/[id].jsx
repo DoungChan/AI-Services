@@ -167,7 +167,7 @@ function ServiceDetail() {
                 help with translations, and much more.{" "}
               </font>
               <font>
-                Users can also take advantage of the tool's persona feature,
+                Users can also take advantage of the tool&pos;s persona feature,
                 which allows them to switch between different personalities such
                 as chefs, travel planners, and social media managers, each with
                 their own unique way of speaking for more personal
