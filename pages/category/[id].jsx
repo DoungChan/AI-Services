@@ -21,16 +21,16 @@ export default function Categorise() {
   }, []);
 
   return (
-    <div className="flex-grow h-screen overflow-hidden  bg-[#121212] rounded-lg">
+    <div className="flex-grow h-screen overflow-hidden  bg-[#121212] rounded-lg ">
       <section
-        className={`flex flex-col items-start space-x-7  h-fit text-white p-8`}
+        className={`flex flex-col items-start space-x-7  h-fit text-white p-8 `}
       >
         <h1 className="text-2xl font-bold">Category Name</h1>
       </section>
       <section className="flex flex-col items-start space-x-7 bg-[#121212] text-white p-8 h-header-offset overflow-y-auto">
         {" "}
         <div className="flex space-x-3 w-full  justify-center">
-          <Item backgroundColor={""} />
+          <Item />
         </div>
       </section>
     </div>
