@@ -25,7 +25,7 @@ export default function Home() {
       <main className="flex">
         <Center tittle={"Home"} />
       </main>
-      <div className="flex-1 bg-red-500 rounded-b-md">hi</div>
+      <div className="flex-1 bg-red-500 rounded-b-md">hello</div>
     </div>
   );
 }
