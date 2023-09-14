@@ -1,13 +1,10 @@
-import {
-  ArrowDownCircleIcon,
-  ArrowLeftCircleIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/24/outline";
-
 import React, { useEffect, useState } from "react";
 import { shuffle } from "lodash";
-
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { useRecoilValue } from "recoil";
+import { searchQueryState } from "@/state/atom";
+import data from "@/data/data";
+import Item from "./card/Item";
+import Footer from "./Footer";
 
 const colors = [
   "from-indigo-500",
@@ -19,36 +16,46 @@ const colors = [
   "from-purple-500",
 ];
 
-function Center({ tittle }) {
+function Center() {
   const [color, setColor] = useState("");
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, []);
+  const searchQuery = useRecoilValue(searchQueryState);
+  const [sortedData, setSortedData] = useState([]);
+  const [searchFilter, setSearchFilter] = useState([]);
+  useEffect(() => {
+    if (data && data.length > 0) {
+      // Sort the data in descending order based on month_visited_count
+      const sorted = [...data].sort(
+        (a, b) => b.month_visited_count - a.month_visited_count
+      );
+      return setSortedData(data);
+    }
 
+    if (searchQuery !== "") {
+      const searchFilter = sortedData.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      return setSearchFilter(searchFilter);
+    }
+  }, [data, searchQuery]);
+
+  console.log(searchQuery, " dd");
   return (
-    <div className="flex-grow h-full overflow-y-scroll scrollbar-hide bg-[#121212] rounded-lg">
-      <header className="hidden lg:inline absolute top-5 right-8 w-full z-10 pl-[25rem]">
-        <div className="flex justify-between">
-          <div className="flex space-x-3">
-            <div className="w-8 h-8 rounded-full bg-[#2A292A] flex justify-center">
-              <ChevronLeftIcon className="w-8 h-8 text-white p-1" />
-            </div>
-            <div className="w-8 h-8 rounded-full bg-[#2A292A] flex justify-center">
-              <ChevronRightIcon className="w-8 h-8 text-white p-1" />
-            </div>
-          </div>
-          <div className="flex space-x-3"></div>
-        </div>
-      </header>
-
+    <div
+      className={`flex-grow h-full overflow-hidden rounded-lg bg-gradient-to-b to-[#121212] ${color}`}
+    >
       <section
-        className={`flex items-end space-x-7 bg-gradient-to-b to-black ${color} h-80 text-white p-8`}
+        className={`flex-1 flex-col  space-x-7  h-[90px] text-white p-8  justify-center items-center  rounded-lg`}
       >
-        <div>
-          <p>{tittle}</p>
-          <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
-            {tittle}
-          </h1>
+        <h1 className="text-2xl font-bold">Recommentdation</h1>
+      </section>
+      <section className="flex flex-col items-start space-x-7  text-white p-8 h-header-offset overflow-y-auto">
+        {" "}
+        <div className="flex-1 space-x-3 w-full  justify-center pb-10">
+          <Item data={sortedData} />
+          <Footer />
         </div>
       </section>
     </div>

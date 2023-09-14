@@ -36,10 +36,11 @@ body {
 
 *::-webkit-scrollbar-track {
   background: transparent;
+  height: 100%;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: white;
+  background-color: #252525;
   border-radius: 1rem;
   width: 0.5rem;
 }

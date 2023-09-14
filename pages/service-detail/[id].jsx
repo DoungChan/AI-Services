@@ -1,14 +1,18 @@
-import {
-  ArrowDownCircleIcon,
-  ArrowLeftCircleIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/24/outline";
-import useImageColor from "use-image-color";
 import React, { useEffect, useState } from "react";
-import { shuffle } from "lodash";
-import { Image } from "use-image-color";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-
+import { filter, shuffle } from "lodash";
+import data from "@/data/data";
+import { useRouter } from "next/router";
+import Footer from "@/components/Footer";
+import {
+  FacebookIcon,
+  FacebookMessengerIcon,
+  FacebookMessengerShareButton,
+  FacebookShareButton,
+  TelegramIcon,
+  TelegramShareButton,
+  TwitterShareButton,
+} from "react-share";
+import Image from "next/image";
 const colors = [
   "from-indigo-500",
   "from-blue-500",
@@ -25,185 +29,172 @@ function ServiceDetail() {
     setColor(shuffle(colors).pop());
   }, []);
 
-  return (
-    <div className="w-full h-screen overflow-auto bg-[#121212] p-4">
-      <div className="overflow-y-auto  mx-auto rounded-lg w-full md:w-4/5  lg:w-3/5 xl:w-2/5">
-        <img
-          src="https://appliv-gai-production.s3.ap-northeast-1.amazonaws.com/images/zev.png"
-          className="object-contain w-full h-full"
-        />
+  const query = useRouter().query.id;
+  const [filterData, setFilterData] = useState([]);
+  useEffect(() => {
+    let parsedData;
+    const filterDataByCategoryName = () => {
+      const filteredData = data.filter((item) => item.handle === query);
+      const stringifyData = JSON.stringify(filteredData);
+      if (stringifyData) {
+        try {
+          parsedData = JSON.parse(stringifyData);
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+        }
+      }
+      setFilterData(parsedData);
+    }; // Convert to JSON-formatted string
 
-        <div className="mt-6">
-          <div className="space-x-2">
-            <a
-              href="https://app-liv.jp/ai/tools?tag=23/"
-              className="inline-flex items-center rounded-full bg-[#fce9e8] my-1 px-2.5 py-0.5 text-xs font-medium text-[#e1554d] md:transition-opacity md:ease-in md:hover:opacity-75"
-            >
-              <font>
-                <font>chatbot</font>
-              </font>
-            </a>
-            <a
-              href="https://app-liv.jp/ai/tools?tag=811/"
-              className="inline-flex items-center rounded-full bg-[#fce9e8] my-1 px-2.5 py-0.5 text-xs font-medium text-[#e1554d] md:transition-opacity md:ease-in md:hover:opacity-75"
-            >
-              <font>
-                <font>Paid</font>
-              </font>
-            </a>
-          </div>
-          <div>
-            <div className="md:flex md:items-center md:justify-between">
-              <h1 className="mt-3 text-3xl font-medium ">
-                <font>
-                  <font>Zev</font>
-                </font>
-              </h1>
-              <p className="hidden md:block mt-4 md:mt-3 text-sm text-gray-text">
-                <font>
-                  <font>Last updated: April 25, 2023</font>
-                </font>
-              </p>
-            </div>
-            <p className="text-base text-gray-text"></p>
-            <p className="md:hidden mt-4 text-xs text-gray-text">
-              最終更新日：2023年04月25日
-            </p>
-          </div>
-          <div className="lg:col-span-5 lg:col-start-8 mt-4">
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-center sm:col-span-1 sm:px-0">
-                <dt className="text-sm font-medium leading-6 bg-[#252525] px-2 py-1 rounded whitespace-nowrap">
+    filterDataByCategoryName(query);
+  }, [query]);
+
+  // share format
+  let url = `https://ai-services-nine.vercel.app/service-detail/${query}`;
+
+  return (
+    <>
+      <div
+        className={`w-full h-screen overflow-auto bg-gradient-to-b to-[#121212] ${color} px-5 `}
+      >
+        {/* <section
+        className={`flex items-end bg-gradient-to-b to-[#121212] ${color} h-80 text-white w-full `}
+      >
+        <div>
+          <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold"></h1>
+        </div>
+      </section> */}
+
+        <div className="overflow-y-auto mx-auto rounded-lg w-full md:w-4/5  lg:w-3/5 xl:w-2/5">
+          <h1 className="text-center py-11 text-[50px] font-bold">
+            <font>{filterData[0]?.name} </font>
+          </h1>
+          <p className="text-center">
+            <font></font>
+          </p>
+          <img
+            src={filterData[0]?.image}
+            className="object-contain w-full h-full"
+          />
+
+          <div className="mt-6">
+            <div className="space-x-2">
+              {filterData[0]?.categories.map((category, index) => (
+                <a
+                  href={`/category/${category.handle}`}
+                  className="inline-flex items-center rounded-full bg-[#fce9e8] my-1 px-2.5 py-0.5 text-xs font-medium text-[#e1554d] md:transition-opacity md:ease-in md:hover:opacity-75"
+                  key={index}
+                >
                   <font>
-                    <font>Official site</font>
+                    <font>{category.name}</font>
                   </font>
-                </dt>
-                <dd className="pl-4 text-sm leading-6 text-primary-text whitespace-break-spaces">
-                  <a
-                    target="_blank"
-                    href="https://zevbot.com/"
-                    className="break-all"
-                  >
-                    <font>
-                      <font>https://zevbot.com/</font>
-                    </font>
-                  </a>
-                </dd>
+                </a>
+              ))}
+            </div>
+            <div>
+              <div className="md:flex md:items-center md:justify-between">
+                <h1 className="mt-3 text-3xl font-medium ">
+                  <font>
+                    <font>{filterData[0]?.name}</font>
+                  </font>
+                </h1>
+                <p className="hidden md:block mt-4 md:mt-3 text-sm text-gray-text">
+                  <font>
+                    <font>{filterData[0]?.month_visited_count}</font>
+                  </font>
+                </p>
               </div>
-            </dl>
-          </div>
-          <div className="mt-6 lg:col-span-5">
-            <div className="my-6 rounded-md bg-[#252525] py-6 px-4 md:px-5">
-              <div className="recommend-point">
-                <div className="text-base text-white">
-                  <ul role="list">
-                    <li className="relative mt-3 first-of-type:mt-0 pl-6">
-                      <font>
+              <div className="flex flex-row ">
+                {/* <img src="/view.png" /> */}
+                <p className="md:hidden mt-4 text-xs text-gray-text">
+                  {filterData[0]?.month_visited_count}
+                </p>
+              </div>
+            </div>
+            <div className="lg:col-span-5 lg:col-start-8 mt-4">
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex items-center sm:col-span-1 sm:px-0">
+                  <dt className="text-sm font-medium leading-6 bg-[#252525] px-2 py-1 rounded whitespace-nowrap">
+                    <font>
+                      <font>Official site</font>
+                    </font>
+                  </dt>
+                </div>
+              </dl>
+            </div>
+            <div className="mt-6 lg:col-span-5">
+              <div className="my-6 rounded-md bg-[#252525] bg-opacity-60 py-6 px-4 md:px-5">
+                <div className="recommend-point">
+                  <div className="text-base text-white">
+                    <ul role="list">
+                      <li className="relative mt-3 first-of-type:mt-0 pl-6">
                         <font>
-                          Zev works with popular instant messaging apps like
-                          Telegram, LINE, and Viber and gives you access to the
-                          latest and most advanced AI assistant called ChatGPT.
+                          <font>{filterData[0]?.description}</font>
                         </font>
-                      </font>
-                    </li>
-                    <li className="relative mt-3 first-of-type:mt-0 pl-6">
-                      <font>
-                        <font>
-                          Zev can answer queries, provide personalized
-                          recommendations, and assist with translations.{" "}
-                        </font>
-                        <font>
-                          Users can also switch between different personalities
-                          such as a chef, travel planner, or social media
-                          manager.
-                        </font>
-                      </font>
-                    </li>
-                    <li className="relative mt-3 first-of-type:mt-0 pl-6">
-                      <font>
-                        <font>
-                          Zev stores several hours of conversation history and
-                          allows users to pick up where they left off.{" "}
-                        </font>
-                        <font>
-                          The tool also supports group conversations on
-                          Telegram, where up to 50 people can participate at the
-                          same time.
-                        </font>
-                      </font>
-                    </li>
-                  </ul>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
+              <a
+                target="_blank"
+                href="https://ottertune.com"
+                className={` my-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3.5 text-lg font-medium text-white hover:bg-primary-hover md:duration-150 md:ease-in`}
+              >
+                <font>
+                  <font>Try using {filterData[0]?.name}</font>
+                </font>
+              </a>
+              <div className="my-6 rounded-md bg-[#252525] bg-opacity-60 py-4 px-4 md:px-5 justify-center items-center ">
+                <h1 className="text-xl font-bold text-center">Share</h1>
+
+                <div className="text-base text-white flex flex-1 justify-between px-5">
+                  <div className="flex flex-row w-full md:gap-24 gap-10 justify-center items-center py-4">
+                    <FacebookShareButton
+                      url={url}
+                      quote="Check out the new promotion on PromoKh!"
+                    >
+                      <Image
+                        src={"/facebook.png"}
+                        alt="Twitter"
+                        className=" cursor-pointer"
+                        width={52}
+                        height={52}
+                      />
+                    </FacebookShareButton>
+
+                    <TwitterShareButton
+                      url={url}
+                      hashtags={["travel", "adventure"]}
+                    >
+                      <Image
+                        src={"/twitter.png"}
+                        alt="Twitter"
+                        className=" cursor-pointer"
+                        width={52}
+                        height={52}
+                      />
+                    </TwitterShareButton>
+                    <TelegramShareButton url={url}>
+                      <Image
+                        src={"/telegram.png"}
+                        alt="telegram"
+                        className=" cursor-pointer"
+                        width={52}
+                        height={52}
+                      />
+                    </TelegramShareButton>
+                  </div>
+                </div>
+              </div>
+              <h1 className="text-3xl font-medium  py-10"> Related AI app</h1>
+              <div className="my-6  border-t-2 bg-opacity-60 py-6 px-4 md:px-5 justify-center items-center"></div>
             </div>
-            <a
-              target="_blank"
-              href="https://zevbot.com/"
-              className={` my-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3.5 text-lg font-medium text-white hover:bg-primary-hover md:duration-150 md:ease-in`}
-            >
-              <font>
-                <font>Try using Zev</font>
-              </font>
-            </a>
           </div>
         </div>
-        <div className="mt-10">
-          <h2 className="mt-20 mb-6 text-2xl font-bold text-white border-b-2 border-gray-line pb-2.5">
-            <font>
-              <font>Overview of Zev</font>
-            </font>
-          </h2>
-
-          <p className="my-4 text-base leading-7 text-white">
-            <font>
-              <font>
-                Zev is an AI-powered assistant that integrates with popular
-                instant messaging applications such as Telegram, LINE, and
-                Viber, and gives you access to the latest and most advanced AI
-                assistant called ChatGPT.{" "}
-              </font>
-              <font>
-                Zev can answer queries, provide personalized recommendations,
-                help with translations, and much more.{" "}
-              </font>
-              <font>
-                Users can also take advantage of the tool&pos;s persona feature,
-                which allows them to switch between different personalities such
-                as chefs, travel planners, and social media managers, each with
-                their own unique way of speaking for more personal
-                conversations.{" "}
-              </font>
-              <font>
-                Zev saves hours of conversation history and allows users to pick
-                up where they left off.{" "}
-              </font>
-              <font>
-                The tool supports group conversations on Telegram, where up to
-                50 members can participate at the same time.{" "}
-              </font>
-              <font>
-                Zev has a free trial and after an introductory period there is a
-                $10 monthly subscription fee.{" "}
-              </font>
-              <font>
-                Overall, Zev is a powerful AI chatbot assistant that allows
-                users to easily and intuitively access advanced AI features from
-                their favorite messaging app.
-              </font>
-            </font>
-          </p>
-          <a
-            target="_blank"
-            href="https://zevbot.com/"
-            className="my-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3.5 text-lg font-medium text-white hover:bg-primary-hover md:duration-150 md:ease-in"
-          >
-            <font>
-              <font>Try using Zev</font>
-            </font>
-          </a>
-        </div>
+        <Footer />
       </div>
-    </div>
+    </>
   );
 }
 

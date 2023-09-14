@@ -1,18 +1,20 @@
 import Center from "@/components/Center";
+import Footer from "@/components/Footer";
 import Item from "@/components/card/Item";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import { shuffle } from "lodash";
+import data from "@/data/data";
+import { set, shuffle } from "lodash";
 import React, { useEffect, useState } from "react";
-
+import { useRouter } from "next/router";
 export default function Categorise() {
   const colors = [
-    "from-indigo-600",
-    "from-blue-600",
-    "from-green-600",
-    "from-red-600",
-    "from-yellow-600",
-    "from-pink-600",
-    "from-purple-600",
+    "from-indigo-500",
+    "from-blue-500",
+    "from-green-500",
+    "from-red-500",
+    "from-yellow-500",
+    "from-pink-500",
+    "from-purple-500",
   ];
 
   const [color, setColor] = useState("");
@@ -20,17 +22,50 @@ export default function Categorise() {
     setColor(shuffle(colors).pop());
   }, []);
 
+  const [filterData, setFilterData] = useState([]);
+
+  // query url
+  const query = useRouter().query.id;
+
+  console.log(query);
+
+  // Function to filter data by category name
+
+  useEffect(() => {
+    const filterDataByCategoryName = () => {
+      const filteredData = data.filter((item) => {
+        // Assuming item.categories is an array of category objects
+        return item.categories.some((category) => category.handle === query);
+      });
+      setFilterData(JSON.stringify(filteredData));
+      return filteredData;
+    }; // Convert to JSON-formatted string
+
+    filterDataByCategoryName(query);
+  }, [data, query]);
+
+  let parsedData;
+
+  try {
+    parsedData = JSON.parse(filterData);
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+  }
+  console.log(parsedData);
   return (
-    <div className="flex-grow h-screen overflow-hidden  bg-[#121212] rounded-lg ">
+    <div
+      className={`flex-grow h-full overflow-hidden rounded-lg bg-gradient-to-b to-[#121212] ${color}`}
+    >
       <section
-        className={`flex flex-col items-start space-x-7  h-fit text-white p-8 `}
+        className={`flex-1 flex-col  space-x-7  h-[90px] text-white p-8  justify-center items-center  rounded-lg`}
       >
-        <h1 className="text-2xl font-bold">Category Name</h1>
+        <h1 className="text-2xl font-bold">{query}</h1>
       </section>
-      <section className="flex flex-col items-start space-x-7 bg-[#121212] text-white p-8 h-header-offset overflow-y-auto">
+      <section className="flex flex-col items-start space-x-7  text-white p-8 h-header-offset overflow-y-auto">
         {" "}
-        <div className="flex space-x-3 w-full  justify-center">
-          <Item />
+        <div className="flex-1 space-x-3 w-full  justify-center pb-10">
+          <Item data={parsedData} />
+          <Footer />
         </div>
       </section>
     </div>
