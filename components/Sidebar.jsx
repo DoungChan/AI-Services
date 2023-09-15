@@ -7,8 +7,11 @@ import SearchBar from "./Search";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { sideBarStatus } from "@/state/atom";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { useWindowSize } from "@/util/hook";
 const Sidebar = () => {
   const router = useRouter();
+
+  const windowSize = useWindowSize();
 
   // active category
 
@@ -17,23 +20,20 @@ const Sidebar = () => {
   const [sideBar, setSideBar] = useRecoilState(sideBarStatus);
 
   const handleCategoryClick = (category) => {
+    // tailwind md breakpoint is 768px
+
     setActiveCategory(category);
-    setSideBar(!sideBar);
+    if (windowSize.width < 768) setSideBar(!sideBar);
     router.push(`/category/${category.handle}`);
   };
 
   return (
     <>
       {/* Big screen  */}
-
       <div
-        className={`absolute flex h-full ease-in-out text-gray-400 pr-2 text-md font-medium max-w-[25rem] duration-700 ${
-          sideBar
-            ? "transform translate-x-0 md:relative  "
-            : "transform -translate-x-full md:absolute "
-        }`}
+        className={`absolute md:static flex h-full ease-in-out text-gray-400 pr-2 text-md font-medium max-w-[25rem] `}
       >
-        <div className="h-full w-[21rem] flex flex-col">
+        <div className="h-full w-[25rem] flex flex-col">
           <div className="space-y-4 bg-[#121212] p-4 rounded-lg">
             <button
               className="flex item-center space-x-3 hover:text-white "
@@ -83,6 +83,8 @@ const Sidebar = () => {
                   </div>
                 ))}
               </div>
+
+              {/* small screen */}
             </section>
           </div>
         </div>
