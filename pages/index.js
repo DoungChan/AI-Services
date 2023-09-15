@@ -23,7 +23,7 @@ export default function Home() {
         <link rel="icon" href="" type="image/x-icon" />
       </Head>
       <main className="flex">
-        <Center tittle={"Home"} />
+        <Center />
       </main>
       <div className="flex-1 bg-red-500 rounded-b-md">hello</div>
     </div>

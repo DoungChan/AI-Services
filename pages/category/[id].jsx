@@ -18,14 +18,18 @@ export default function Categorise() {
   ];
 
   const [color, setColor] = useState("");
+  const [action, setAction] = useState(false);
+  const query = useRouter().query.id;
   useEffect(() => {
     setColor(shuffle(colors).pop());
-  }, []);
+    setTimeout(() => {
+      setAction(true);
+    }, 1000);
+  }, [query]);
 
   const [filterData, setFilterData] = useState([]);
 
   // query url
-  const query = useRouter().query.id;
 
   console.log(query);
 
@@ -53,21 +57,29 @@ export default function Categorise() {
   }
   console.log(parsedData);
   return (
-    <div
-      className={`flex-grow h-full overflow-hidden rounded-lg bg-gradient-to-b to-[#121212] ${color}`}
-    >
-      <section
-        className={`flex-1 flex-col  space-x-7  h-[90px] text-white p-8  justify-center items-center  rounded-lg`}
-      >
-        <h1 className="text-2xl font-bold">{query}</h1>
-      </section>
-      <section className="flex flex-col items-start space-x-7  text-white p-8 h-header-offset overflow-y-auto">
-        {" "}
-        <div className="flex-1 space-x-3 w-full  justify-center pb-10">
-          <Item data={parsedData} />
-          <Footer />
+    <>
+      {action ? (
+        <div
+          className={`flex-grow h-full overflow-hidden rounded-lg bg-gradient-to-b to-[#121212] ${color}`}
+        >
+          <section
+            className={`flex-1 flex-col  space-x-7  h-[90px] text-white p-8  justify-center items-center  rounded-lg`}
+          >
+            <h1 className="text-2xl font-bold">{query}</h1>
+          </section>
+          <section className="flex flex-col items-start space-x-7  text-white p-8 h-header-offset overflow-y-auto">
+            {" "}
+            <div className="flex-1 space-x-3 w-full  justify-center pb-10">
+              <Item data={parsedData} />
+              <Footer />
+            </div>
+          </section>
         </div>
-      </section>
-    </div>
+      ) : (
+        <div className="flex justify-center items-center h-screen w-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      )}
+    </>
   );
 }
