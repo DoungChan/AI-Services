@@ -14,8 +14,6 @@ export default function Home() {
     setMounted(true);
   };
 
-  console.log(mounted);
-
   return (
     <div className="bg-black h-full overflow-hidden flex flex-col  overflow-clip">
       <Head>
@@ -25,7 +23,6 @@ export default function Home() {
       <main className="flex">
         <Center />
       </main>
-      <div className="flex-1 bg-red-500 rounded-b-md">hello</div>
     </div>
   );
 }

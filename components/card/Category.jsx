@@ -16,7 +16,7 @@ const CategoryCard = ({ tittle }) => {
   ]; // List of Tailwind CSS background color classes
 
   const [bgColorClasses, setBgColorClasses] = useState([]);
-  console.log(bgColorClasses[0]);
+
   useEffect(() => {
     // Generate random background color classes for each category
     const randomClasses = categories.map(() => {

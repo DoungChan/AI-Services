@@ -6,6 +6,8 @@ import data from "@/data/data";
 import { set, shuffle } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { sideBarStatus } from "@/state/atom";
 export default function Categorise() {
   const colors = [
     "from-indigo-500",
@@ -19,6 +21,7 @@ export default function Categorise() {
 
   const [color, setColor] = useState("");
   const [action, setAction] = useState(false);
+  const [sideBar, setSideBar] = useRecoilState(sideBarStatus);
   const query = useRouter().query.id;
   useEffect(() => {
     setColor(shuffle(colors).pop());
@@ -30,8 +33,6 @@ export default function Categorise() {
   const [filterData, setFilterData] = useState([]);
 
   // query url
-
-  console.log(query);
 
   // Function to filter data by category name
 
@@ -55,31 +56,47 @@ export default function Categorise() {
   } catch (error) {
     console.error("Error parsing JSON:", error);
   }
-  console.log(parsedData);
+
   return (
     <>
-      {action ? (
-        <div
-          className={`flex-grow h-full overflow-hidden rounded-lg bg-gradient-to-b to-[#121212] ${color}`}
+      <div
+        className={` h-full overflow-hidden rounded-lg bg-gradient-to-b to-[#121212] duration-700 ${color}  ${
+          sideBar
+            ? "md:translate-x-[1] duration-1000"
+            : " md:translate-x-[-1] duration-1000"
+        }`}
+      >
+        <section
+          className={`flex-1 flex-row  space-x-7  h-[90px] text-white p-8  justify-center items-center rounded-lg`}
         >
-          <section
-            className={`flex-1 flex-col  space-x-7  h-[90px] text-white p-8  justify-center items-center  rounded-lg`}
-          >
+          <div className="flex space-x-3">
+            {sideBar ? (
+              <div className="w-8 h-8 rounded-full bg-[#2A292A] flex justify-center">
+                <ChevronLeftIcon
+                  className="w-8 h-8 text-white p-1 cursor-pointer"
+                  onClick={() => setSideBar(!sideBar)}
+                />
+              </div>
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-[#2A292A] flex justify-center cursor-pointer">
+                <ChevronRightIcon
+                  className="w-8 h-8 text-white p-1"
+                  onClick={() => setSideBar(!sideBar)}
+                />
+              </div>
+            )}
+
             <h1 className="text-2xl font-bold">{query}</h1>
-          </section>
-          <section className="flex flex-col items-start space-x-7  text-white p-8 h-header-offset overflow-y-auto">
-            {" "}
-            <div className="flex-1 space-x-3 w-full  justify-center pb-10">
-              <Item data={parsedData} />
-              <Footer />
-            </div>
-          </section>
-        </div>
-      ) : (
-        <div className="flex justify-center items-center h-screen w-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-        </div>
-      )}
+          </div>
+        </section>
+        <section className="flex flex-col items-start space-x-7  text-white p-8 h-header-offset overflow-y-auto">
+          {" "}
+          <div className="flex-1 space-x-3 w-full  justify-center pb-10">
+            <Item data={parsedData} />
+            <Footer />
+          </div>
+        </section>
+      </div>
     </>
   );
 }

@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  ArrowRightIcon,
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-  PlusIcon,
-} from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 
 import categories from "@/data/category";
 import SearchBar from "./Search";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { sideBarStatus } from "@/state/atom";
+import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 const Sidebar = () => {
   const router = useRouter();
 
   // active category
 
   const [activeCategory, setActiveCategory] = useState(null);
+  // display side bar
+  const [sideBar, setSideBar] = useRecoilState(sideBarStatus);
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
+    setSideBar(!sideBar);
     router.push(`/category/${category.handle}`);
   };
+
   return (
     <>
       {/* Big screen  */}
-      <div className="h-full text-gray-400 pr-2 text-md font-medium max-w-[25rem] hidden md:flex duration-700 ">
+
+      <div
+        className={`absolute flex h-full ease-in-out text-gray-400 pr-2 text-md font-medium max-w-[25rem] duration-700 ${
+          sideBar
+            ? "transform translate-x-0 md:relative  "
+            : "transform -translate-x-full md:absolute "
+        }`}
+      >
         <div className="h-full w-[21rem] flex flex-col">
           <div className="space-y-4 bg-[#121212] p-4 rounded-lg">
             <button
-              className="flex item-center space-x-3 hover:text-white"
+              className="flex item-center space-x-3 hover:text-white "
               onClick={() => router.push("/")}
             >
               <img
@@ -37,23 +45,21 @@ const Sidebar = () => {
               />
             </button>
           </div>
-          <div className=" bg-[#121212] rounded-lg mt-2 h-screen">
-            <section className="flex flex-col justify-between items-start px-4 py-8 space-y-3         ">
-              <div className="px-4">
-                <button className="flex justify-between items-center  hover:text-white w-full">
+          <div className=" bg-[#121212] rounded-lg mt-2 h-screen md:bg-opacity-100 bg-opacity-80">
+            <section className="flex flex-col justify-between items-start px-4 py-8 space-y-3">
+              <div className="px-4 flex w-full justify-between">
+                <button className="flex  items-center  hover:text-white w-full space-x-2">
+                  <img src="/categories.png" className="w-5 h-5" />
                   <div className="flex items-center space-x-3">
-                    {/* <BuildingLibraryIcon className="w-7 h-7" /> */}
-                    <p>Categorise</p>
+                    <p>Categorize</p>
                   </div>
                 </button>
-              </div>
-              <div className="flex space-x-2 px-4">
-                <div className="bg-[#2A292A] text-white items-center justify-center rounded-3xl text-center flex px-2 py-1 text-sm">
-                  <p className="">Popularity order</p>
-                </div>
-                <div className="bg-[#2A292A] text-white items-center justify-center rounded-3xl text-center flex px-2 py-1 text-sm">
-                  <p className="">New arrival order</p>
-                </div>
+                <button className=" flex md:hidden hover:text-white">
+                  <ChevronLeftIcon
+                    className="w-8 h-8 text-white p-1 cursor-pointer"
+                    onClick={() => setSideBar(!sideBar)}
+                  />
+                </button>
               </div>
             </section>
             <section className="flex justify-between items-center p-4 max-h-[700px] overflow-y-auto">
@@ -68,8 +74,11 @@ const Sidebar = () => {
                     onClick={() => handleCategoryClick(category)}
                     key={index}
                   >
-                    <div>
+                    <div className="flex flex-row  w-full justify-between">
                       <p className="text-sm">{category.name}</p>
+                      <p className="text-sm text-gray-400 ml-2">
+                        {category.tool_count}
+                      </p>
                     </div>
                   </div>
                 ))}

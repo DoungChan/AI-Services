@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { shuffle } from "lodash";
-import { useRecoilValue } from "recoil";
-import { searchQueryState } from "@/state/atom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { recommendationsData, searchQueryState } from "@/state/atom";
 import data from "@/data/data";
 import Item from "./card/Item";
 import Footer from "./Footer";
-
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { sideBarStatus } from "@/state/atom";
 const colors = [
   "from-indigo-500",
   "from-blue-500",
@@ -22,7 +23,8 @@ function Center() {
     setColor(shuffle(colors).pop());
   }, []);
   const searchQuery = useRecoilValue(searchQueryState);
-  const [sortedData, setSortedData] = useState([]);
+  const [sortedData, setSortedData] = useRecoilState(recommendationsData);
+  const [sideBar, setSideBar] = useRecoilState(sideBarStatus);
   const [searchFilter, setSearchFilter] = useState([]);
   useEffect(() => {
     if (data && data.length > 0) {
@@ -41,14 +43,28 @@ function Center() {
     }
   }, [data, searchQuery]);
 
-  console.log(searchQuery, " dd");
   return (
     <div
       className={`flex-grow h-full overflow-hidden rounded-lg bg-gradient-to-b to-[#121212] ${color}`}
     >
       <section
-        className={`flex-1 flex-col  space-x-7  h-[90px] text-white p-8  justify-center items-center  rounded-lg`}
+        className={` flex space-x-7  h-[90px] text-white p-8  items-center justify-start  rounded-lg`}
       >
+        {sideBar ? (
+          <div className="w-8 h-8 rounded-full bg-[#2A292A] flex justify-center">
+            <ChevronLeftIcon
+              className="w-8 h-8 text-white p-1 cursor-pointer"
+              onClick={() => setSideBar(!sideBar)}
+            />
+          </div>
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-[#2A292A] flex justify-center cursor-pointer">
+            <ChevronRightIcon
+              className="w-8 h-8 text-white p-1"
+              onClick={() => setSideBar(!sideBar)}
+            />
+          </div>
+        )}
         <h1 className="text-2xl font-bold">Recommentdation</h1>
       </section>
       <section className="flex flex-col items-start space-x-7  text-white p-8 h-header-offset overflow-y-auto">

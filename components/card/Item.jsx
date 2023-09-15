@@ -52,22 +52,26 @@ export default function Item({ data }) {
                           router.push(`/category/${category.handle}`); // Navigate to category page
                         }}
                       >
-                        <font>
-                          <font>{category.name}</font>
-                        </font>
+                        <p className="max-w-[100px] truncate">
+                          {category.name}
+                        </p>
                       </a>
                     ))}
                   </div>
                   <div className="flex justify-between items-center">
-                    <h1 className={`text-sm font-bold  rounded-xl w-fit`}>
+                    <h1
+                      className={`text-sm font-bold max-w-[200px] truncate rounded-xl w-fit`}
+                    >
                       {data.name}
                     </h1>
 
-                    <div className="justify-center items-center mt-4">
-                      <img src="/star.png" className="w-4 h-4" />
+                    <div className="justify-center items-center mt-4 flex space-x-2 px-2">
                       <h1 className="text-sm font-bold mb-4  rounded-3xl w-fit">
-                        {data.review} 7.4
+                        {data.collected_count > 7
+                          ? 10
+                          : data.collected_count + 3}
                       </h1>
+                      <img src="/star.png" className="w-4 h-4 -mt-4" />
                     </div>
                   </div>
                   <div className="">

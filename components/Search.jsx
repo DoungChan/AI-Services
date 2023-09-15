@@ -26,10 +26,9 @@ const SearchBar = () => {
     if (event.key === "Enter") {
       // Store the data in state or take the desired action
       setSearchQuery(searchQuery);
-      console.log(searchQuery);
     }
   };
-  console.log(searchQuery);
+
   return (
     <div className="relative">
       <button className="absolute top-0 left-0" onClick={toggleSearch}>
